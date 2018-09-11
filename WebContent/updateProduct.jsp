@@ -5,13 +5,13 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="UTF-8">
-		<title>Update product</title>
+		<title>Update country</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
 		<div id="container">
 			<jsp:include page="header.jsp">
-				<jsp:param value="Update product" name="title"/>
+				<jsp:param value="Update country" name="title"/>
 			</jsp:include>
 			<main>
 				<c:if test="${!result.isEmpty() && result != null}">
@@ -23,27 +23,23 @@
 						</c:forEach>
 					</div>
 				</c:if>
-			    <form method="post" action="Controller?action=updateProduct" novalidate="novalidate">
-			        <input type="hidden" id="id" name="id" value="<c:choose><c:when test="${idPreviousValue == null}">${product.getProductId()}</c:when><c:otherwise>${idPreviousValue}</c:otherwise></c:choose>">
+			    <form method="post" action="Controller?action=updateCountry" novalidate="novalidate">
+			        <input type="hidden" id="id" name="id" value="<c:choose><c:when test="${countryIDPreviousValue == null}">${country.getId()}</c:when><c:otherwise>${countryIDPreviousValue}</c:otherwise></c:choose>">
 			        <p class="form-group ${nameClass}">
 				        <label for="name">Name</label>
-				        <input type="text" id="name" name="name" value="<c:choose><c:when test="${namePreviousValue == null}">${product.getName()}</c:when><c:otherwise>${namePreviousValue}</c:otherwise></c:choose>">
+				        <input type="text" id="name" name="name" value="<c:choose><c:when test="${namePreviousValue == null}">${country.getName()}</c:when><c:otherwise>${namePreviousValue}</c:otherwise></c:choose>">
 				    </p>
-			        <p class="form-group ${descriptionClass}">
-				        <label for="description">Description</label>
-				        <input type="text" id="description" name="description" value="<c:choose><c:when test="${descriptionPreviousValue == null}">${product.getDescription()}</c:when><c:otherwise>${descriptionPreviousValue}</c:otherwise></c:choose>">
+			        <p class="form-group ${incomeClass}">
+				        <label for="income">Income</label>
+				        <input type="number" id="income" name="income" value="<c:choose><c:when test="${incomePreviousValue == null}">${country.getIncome()}</c:when><c:otherwise>${incomePreviousValue}</c:otherwise></c:choose>">
 			        </p>
-			        <p class="form-group ${priceClass}">
-				        <label for="price">Price</label>
-				        <input type="number" step="0.01" id="price" name="price" value="<c:choose><c:when test="${pricePreviousValue == null}">${product.getPrice()}</c:when><c:otherwise>${pricePreviousValue}</c:otherwise></c:choose>">
-			        </p>
-			        <p class="form-group ${amountClass}">
-				        <label for="amount">Amount</label>
-				        <input type="number" id="amount" name="amount" value="<c:choose><c:when test="${amountPreviousValue == null}">${product.getAmount()}</c:when><c:otherwise>${amountPreviousValue}</c:otherwise></c:choose>">
+			        <p class="form-group ${territoriesClass}">
+				        <label for="territories">Territories</label>
+				        <input type="number"  id="territories" name="territories" value="<c:choose><c:when test="${territoriesPreviousValue == null}">${country.getTerritories()}</c:when><c:otherwise>${territoriesPreviousValue}</c:otherwise></c:choose>">
 			        </p>
 			        <p>
-			        	<label for="updateProduct">&nbsp;</label>
-			        	<input type="submit" id="updateProduct" value="Update product">
+			        	<label for="updateCountry">&nbsp;</label>
+			        	<input type="submit" id="updateCountry" value="Update country">
 			        </p>
 			    </form>
 			</main>

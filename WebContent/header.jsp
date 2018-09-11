@@ -44,6 +44,14 @@
 					<li><a href="Controller?action=newConnection">Add connection</a></li>
 				</c:otherwise>
 			</c:choose>
+			<c:choose>
+				<c:when test="${param.title == 'Administration'}">
+					<li id="actual"><a href="Controller?action=showAdministration">Administration</a></li>
+				</c:when>
+				<c:otherwise>
+					<li><a href="Controller?action=showAdministration">Administration</a></li>
+				</c:otherwise>
+			</c:choose>
 		</ul>
 	</nav>
 	<h2>${param.title}</h2>

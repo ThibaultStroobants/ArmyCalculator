@@ -20,7 +20,7 @@
 			        <p>Name: ${country.getName()}</p>
 			        <p>Income: ${country.getIncome()}</p>
 			        <p>Territories: ${country.getTerritories}</p>
-			        <p><input type="submit" id="deleteUser" value="Delete"> <a href="Controller?action=userOverview">Cancel</a></p>
+			        <p><input type="submit" id="deleteCountry" value="Delete"> <a href="Controller?action=countryOverview">Cancel</a></p>
 			    </form>
 			</main>
 			<jsp:include page="footer.jsp"></jsp:include>

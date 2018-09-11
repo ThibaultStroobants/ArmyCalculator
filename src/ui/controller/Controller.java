@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +55,11 @@ public class Controller extends HttpServlet {
 		case "countryOverview":
 			destination = doCountryOverview(request, response);
 			break;
+			
+		case "connectionOverview":
+			destination = doConnectionOverview(request, response);
+			break;
+			
 		case "newCountry":
 			destination = "newCountry.jsp";
 			break;
@@ -79,6 +83,10 @@ public class Controller extends HttpServlet {
 		case "deleteCountry":
 			destination = doDeleteCountry(request, response);
 			break;
+			
+		case "showAdministration":
+			destination = "administration.jsp";
+			break;
 
 		default:
 			destination = "index.jsp";
@@ -93,6 +101,12 @@ public class Controller extends HttpServlet {
 		List<Country> countries = this.countries.getAll();
 		request.setAttribute("countries", countries);
 		return "countryOverview.jsp";
+	}
+
+	private String doConnectionOverview(HttpServletRequest request, HttpServletResponse response) {
+		List<Country> countries = this.countries.getAll();
+		request.setAttribute("countries", countries);
+		return "connectionOverview.jsp";
 	}
 	
 	private String doAddCountry(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
