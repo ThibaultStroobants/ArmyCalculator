@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import domain.db.CountryDb;
+import domain.model.Connection;
 import domain.model.Country;
 
 @WebServlet("/Controller")
@@ -28,6 +29,15 @@ public class Controller extends HttpServlet {
 	
 	public Controller() {
 		super();
+		/*try {
+			this.loadSavefile(null, true);
+		} catch (FileNotFoundException e) {
+			throw new ControllerException(e);
+		} catch (ClassNotFoundException e) {
+			throw new ControllerException(e);
+		} catch (IOException e) {
+			throw new ControllerException(e);
+		}*/
 	}
 	
 	@Override
@@ -52,12 +62,8 @@ public class Controller extends HttpServlet {
 		}
 		
 		switch (action) {
-		case "countryOverview":
+		case "countryOverview": // Country
 			destination = doCountryOverview(request, response);
-			break;
-			
-		case "connectionOverview":
-			destination = doConnectionOverview(request, response);
 			break;
 			
 		case "newCountry":
@@ -84,8 +90,44 @@ public class Controller extends HttpServlet {
 			destination = doDeleteCountry(request, response);
 			break;
 			
-		case "showAdministration":
+		case "connectionOverview": // Connection
+			destination = doConnectionOverview(request, response);
+			break;
+			
+		case "newConnection":
+			destination = "newConnection.jsp";
+			break;
+			
+		case "addConnection":
+			destination = doAddConnection(request, response);
+			break;
+			
+		case "fetchConnectionForUpdate":
+			destination = doFetchConnectionForUpdate(request, response);
+			break;
+			
+		case "updateConnection":
+			destination = doUpdateConnection(request, response);
+			break;
+			
+		case "fetchConnectionForDelete":
+			destination = doFetchConnectionForDelete(request, response);
+			break;
+		
+		case "deleteConnection":
+			destination = doDeleteConnection(request, response);
+			break;
+			
+		case "showAdministration": // administration
 			destination = "administration.jsp";
+			break;
+			
+		case "saveCountries":
+			destination = doSaveCountries(request, response);
+			break;
+			
+		case "loadCountries":
+			destination = doLoadCountries(request, response);
 			break;
 
 		default:
@@ -102,12 +144,6 @@ public class Controller extends HttpServlet {
 		request.setAttribute("countries", countries);
 		return "countryOverview.jsp";
 	}
-
-	private String doConnectionOverview(HttpServletRequest request, HttpServletResponse response) {
-		List<Country> countries = this.countries.getAll();
-		request.setAttribute("countries", countries);
-		return "connectionOverview.jsp";
-	}
 	
 	private String doAddCountry(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String destination = "newCountry.jsp";
@@ -122,18 +158,13 @@ public class Controller extends HttpServlet {
 		
 		if (result.size() > 0) {
 			request.setAttribute("result", result);
-			destination = "newCountry.jsp";
-		}
-		
-		else {
+		} else {
 			try {
 				countries.add(country);
 				request.setAttribute("success", true);
-				destination = "newCountry.jsp";
 			} catch (Exception e) {
 				result.add(e.getMessage());
 				request.setAttribute("result", result);
-				destination = "newUser.jsp";
 			}
 		}
 		
@@ -188,24 +219,6 @@ public class Controller extends HttpServlet {
 		}
 	}
 	
-	private String doFetchCountryForDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String destination = "deleteCountry.jsp";
-		Country country;
-		String countryID = request.getParameter("countryid");
-		country = countries.get(countryID);
-		
-		request.setAttribute("country", country);
-		return destination;
-	}
-
-	private String doDeleteCountry(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String destination;
-		String countryID = request.getParameter("id");
-		countries.delete(countryID);
-		destination = doCountryOverview(request, response);
-		return destination;
-	}
-	
 	private String doFetchCountryForUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String destination = "updateCountry.jsp";
 		Country country;
@@ -230,8 +243,7 @@ public class Controller extends HttpServlet {
 		if (result.size() > 0) {
 			request.setAttribute("result", result);
 			destination = "updateCountry.jsp";
-		}
-		else {
+		} else {
 			try {
 				countries.update(country);
 				destination = doCountryOverview(request, response);
@@ -242,6 +254,177 @@ public class Controller extends HttpServlet {
 			}
 		}
 		return destination;
+	}
+	
+	private String doFetchCountryForDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String destination = "deleteCountry.jsp";
+		Country country;
+		String countryID = request.getParameter("countryid");
+		country = countries.get(countryID);
+		
+		request.setAttribute("country", country);
+		return destination;
+	}
+
+	private String doDeleteCountry(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String destination;
+		String countryID = request.getParameter("id");
+		countries.delete(countryID);
+		destination = doCountryOverview(request, response);
+		return destination;
+	}
+
+	private String doConnectionOverview(HttpServletRequest request, HttpServletResponse response) {
+		List<Country> countries = this.countries.getAll();
+		request.setAttribute("countries", countries);
+		return "connectionOverview.jsp";
+	}
+
+	private String doAddConnection(HttpServletRequest request, HttpServletResponse response) {
+		String destination = "newConnection.jsp";
+		Connection connection = new Connection();
+		List<String> result = new ArrayList<String>();
+		
+		Country country = getCountry(connection, request, result);
+		getAdjacentCountry(connection, request, result);
+		getAdjacentTerritories(connection, request, result);
+		
+		if (result.size() > 0) {
+			request.setAttribute("result", result);
+		} else {
+			try {
+				country.addConnection(connection);
+				request.setAttribute("success", true);
+			} catch (Exception e) {
+				result.add(e.getMessage());
+				request.setAttribute("result", result);
+			}
+		}
+		
+		return destination;
+	}
+
+	private Country getCountry(Connection connection, HttpServletRequest request, List<String> result) {
+		Country country = null;
+		
+		try {
+			country = this.countries.get(request.getParameter("countryid"));
+			request.setAttribute("countryidPreviousValue", country.getId());
+			request.setAttribute("countryClass", "has-success");
+		} catch (Exception e) {
+			request.setAttribute("countryClass", "has-error");
+			result.add(e.getMessage());
+		}
+		return country;
+	}
+
+	private void getAdjacentCountry(Connection connection, HttpServletRequest request, List<String> result) {
+		String adjacentCountryId = request.getParameter("adjacentcountryid");
+		request.setAttribute("adjacentCountryPreviousValue", adjacentCountryId);
+		try {
+			connection.setAdjacentCountry(this.countries.get(adjacentCountryId));
+			request.setAttribute("adjacentCountryClass", "has-success");
+		} catch (Exception e) {
+			request.setAttribute("adjacentCountryClass", "has-error");
+			result.add(e.getMessage());
+		}
+	}
+
+	private void getAdjacentTerritories(Connection connection, HttpServletRequest request, List<String> result) {
+		int adjacentTerritories = Integer.valueOf(request.getParameter("territories"));
+		request.setAttribute("territoriesPreviousValue", adjacentTerritories);
+		try {
+			connection.setAdjacentTerritories(adjacentTerritories);
+			request.setAttribute("adjacentTerritoriesClass", "has-success");
+		} catch (Exception e) {
+			request.setAttribute("adjacentTerritoriesClass", "has-error");
+			result.add(e.getMessage());
+		}
+	}
+
+	private String doFetchConnectionForUpdate(HttpServletRequest request, HttpServletResponse response) {
+		String destination = "updateConnection.jsp";
+		Country country;
+		Connection connection;
+		country = countries.get(request.getParameter("countryid"));
+		connection = country.getConnection(request.getParameter("connectioncountry"));
+		
+		request.setAttribute("country", country);
+		request.setAttribute("connection", connection);
+		return destination;
+	}
+
+	private String doUpdateConnection(HttpServletRequest request, HttpServletResponse response) {
+		String destination = doConnectionOverview(request, response);
+		Connection connection = new Connection();
+		List<String> result = new ArrayList<String>();
+		
+		Country country = getCountry(connection, request, result);
+		getAdjacentCountry(connection, request, result);
+		getAdjacentTerritories(connection, request, result);
+		
+		if (result.size() > 0) {
+			request.setAttribute("result", result);
+			destination = "updateConnection.jsp";
+		} else {
+			try {
+				country.addConnection(connection);
+				destination = doConnectionOverview(request, response);
+			} catch (Exception e) {
+				result.add(e.getMessage());
+				request.setAttribute("result", result);
+				destination = "updateConnection.jsp";
+			}
+		}
+		
+		return destination;
+	}
+
+	private String doFetchConnectionForDelete(HttpServletRequest request, HttpServletResponse response) {
+		String destination = "deleteConnection.jsp";
+		Country country;
+		Connection connection;
+		country = countries.get(request.getParameter("countryid"));
+		connection = country.getConnection(request.getParameter("connectioncountry"));
+		
+		request.setAttribute("country", country);
+		request.setAttribute("connection", connection);
+		return destination;
+	}
+
+	private String doDeleteConnection(HttpServletRequest request, HttpServletResponse response) {
+		String destination;
+		Country country = countries.get(request.getParameter("countryid"));
+		Connection connection = country.getConnection(request.getParameter("connectioncountry"));
+		country.deleteConnection(connection);
+		destination = doConnectionOverview(request, response);
+		return destination;
+	}
+
+	private String doSaveCountries(HttpServletRequest request, HttpServletResponse response) {
+		String Destination = "administration.jsp";
+		String path = request.getParameter("path");
+		boolean canOverwrite = Boolean.getBoolean(request.getParameter("overwrite"));
+		try {
+			storeSaveFile(path, canOverwrite);
+			request.setAttribute("success", "Successfully saved all countries");
+		} catch (Exception e) {
+			request.setAttribute("error", e.getMessage());
+		}
+		return Destination;
+	}
+
+	private String doLoadCountries(HttpServletRequest request, HttpServletResponse response) {
+		String Destination = "administration.jsp";
+		String path = request.getParameter("path");
+		boolean canOverwrite = Boolean.getBoolean(request.getParameter("overwrite"));
+		try {
+			loadSavefile(path, canOverwrite);
+			request.setAttribute("success", "Successfully loaded in all countries");
+		} catch (Exception e) {
+			request.setAttribute("error", e.getMessage());
+		}
+		return Destination;
 	}
 	
 	private void loadSavefile(String path, boolean canOverwrite) throws FileNotFoundException, IOException, ClassNotFoundException {

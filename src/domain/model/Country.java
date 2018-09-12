@@ -103,7 +103,19 @@ public class Country implements Serializable {
 		if (connection == null) {
 			throw new IllegalArgumentException("No connection given");
 		}
+		if (connection.getAdjacentCountry() == this) {
+			throw new IllegalArgumentException("Country can't be adjacent to itself");
+		}
 		connections.add(connection);
 	}
-
+	
+	public void deleteConnection(Connection connection) {
+		if (connection == null) {
+			throw new IllegalArgumentException("No connection given");
+		}
+		if (!this.connections.isConnection(connection)) {
+			throw new IllegalArgumentException("Connection doesn't exist");
+		}
+		this.connections.delete(connection);
+	}
 }

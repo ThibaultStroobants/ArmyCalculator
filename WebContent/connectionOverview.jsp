@@ -15,38 +15,28 @@
 			</jsp:include>
 			<main>
 				<c:forEach var="country" items="${countries}">
-					<h2>${country.getName()}</h2>
+					<h2>${country.getName()} | ${country.getIncome()} apt</h2>
 					<table>
 						<tr>
-							<th># Adj</th>
+							<th>Name of adjacent country</th>
+							<th># Adjacent territories of ${country.getName()}</th>
+							<th># Adjacent territories of adjacent country</th>
+							<th># Armies on all adjacent territories of ${country.getName()}</th>
+							<th>UPDATE?</th>
+							<th>DELETE?</th>
 						</tr>
+						<c:forEach var="connection" items="${country.getConnections()}">
+							<tr>
+								<td>${connection.getAdjacentCountry.getName()}</td>
+								<td>${connection.getAdjacentTerritories()}</td>
+								<td>${connection.getAdjacentCountry.getConnection(country).getAdjacentTerritories()}</td>
+								<td>${country.getCalculatedArmiesPerTerritory(connection)}</td>
+								<td><a href="Controller?action=fetchConnectionForUpdate&countryid=${country.getId()}&connectioncountry=${connection.getAdjacentCountry().getName()}">UPDATE</a></td>
+								<td><a href="Controller?action=fetchConnectionForDelete&countryid=${country.getId()}&connectioncountry=${connection.getAdjacentCountry().getName()}">DELETE</a></td>
+							</tr>
+						</c:forEach>
 					</table>
 				</c:forEach>
-			
-			
-			
-			
-				<table>
-					<tr>
-						<th>ID <a href="Controller?action=sortCountries&orderby=id">Sorteer</a></th>
-						<th>Name <a href="Controller?action=sortCountries&orderby=name">Sorteer</a></th>
-						<th>Income <a href="Controller?action=sortCountries&orderby=income">Sorteer</a></th>
-						<th>Territories <a href="Controller?action=sortCountries&orderby=territories">Sorteer</a></th>
-						<th>UPDATE?</th>
-						<th>DELETE?</th>
-					</tr>
-					
-						<tr>
-							<td>${country.getId()}</td>
-							<td>${country.getName()}</td>
-							<td>${country.getIncome()}</td>
-							<td>${country.getTerritories()}</td>
-							<td><a href="Controller?action=fetchUserForUpdate&countryid=${country.getId()}">UPDATE</a></td>
-							<td><a href="Controller?action=fetchUserForDelete&countryid=${country.getId()}">DELETE</a></td>
-						</tr>
-					
-					<caption>Countries Overview</caption>
-				</table>
 			</main>
 			<jsp:include page="footer.jsp"></jsp:include>
 		</div>

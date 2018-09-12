@@ -29,8 +29,8 @@
 							<td>${country.getName()}</td>
 							<td>${country.getIncome()}</td>
 							<td>${country.getTerritories()}</td>
-							<td><a href="Controller?action=fetchUserForUpdate&countryid=${country.getId()}">UPDATE</a></td>
-							<td><a href="Controller?action=fetchUserForDelete&countryid=${country.getId()}">DELETE</a></td>
+							<td><a href="Controller?action=fetchCountryForUpdate&countryid=${country.getId()}">UPDATE</a></td>
+							<td><a href="Controller?action=fetchCountryForDelete&countryid=${country.getId()}">DELETE</a></td>
 						</tr>
 					</c:forEach>
 					<caption>Countries Overview</caption>

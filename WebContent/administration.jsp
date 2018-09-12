@@ -14,6 +14,16 @@
 				<jsp:param value="Administration" name="title"/>
 			</jsp:include>
 			<main>
+				<c:if test="${error != null && !error.isEmpty()}">
+					<div class="alert-danger">
+						${error}
+					</div>
+				</c:if>
+				<c:if test="${success != null && !success.isEmpty()}">
+					<div class="alert-success">
+						${success}
+					</div>
+				</c:if>
 				<h2>Save Database</h2>
 				<form method="post" action="Controller?action=saveCountries" novalidate="novalidate">
 					<p>
