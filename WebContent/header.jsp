@@ -1,5 +1,5 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <header>
 	<h1><span>Army Calculator</span></h1>
 	<nav>
@@ -21,7 +21,7 @@
 				</c:otherwise>
 			</c:choose>
 			<c:choose>
-				<c:when test="${param.title == 'Connections overview'}">
+				<c:when test="${param.title == 'Connection overview'}">
 					<li id="actual"><a href="Controller?action=connectionOverview">Connections</a></li>
 				</c:when>
 				<c:otherwise>

@@ -3,11 +3,14 @@ package domain.db;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import domain.model.Connection;
 
 public class ConnectionDb implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = Long.parseLong("5044190751079313744");
 	private List<Connection> connections = new ArrayList<>();
 	
 	public ConnectionDb() {

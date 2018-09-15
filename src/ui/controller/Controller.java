@@ -24,11 +24,28 @@ import domain.model.Country;
 @WebServlet("/Controller")
 public class Controller extends HttpServlet {
 	
-	private static final long serialVersionUID = 1L;
-	private CountryDb countries;
+	private static final long serialVersionUID = Long.parseLong("5044190751079313744");
+	private CountryDb countries = new CountryDb();
 	
 	public Controller() {
 		super();
+		Country portugal = new Country("A", "Portugal", 6, 18);
+		Country spain = new Country("B", "Spain", 17, 50);
+		Country france = new Country("C", "France", 31, 93);
+		
+		countries.add(portugal);
+		countries.add(spain);
+		countries.add(france);
+		
+		Connection portspain = new Connection(spain, 10);
+		Connection spainport = new Connection(portugal, 7);
+		Connection francespain = new Connection(spain, 5);
+		Connection spainfrance = new Connection(france, 5);
+		
+		portugal.addConnection(portspain);
+		spain.addConnection(spainport);
+		spain.addConnection(spainfrance);
+		france.addConnection(francespain);
 		/*try {
 			this.loadSavefile(null, true);
 		} catch (FileNotFoundException e) {
@@ -241,6 +258,12 @@ public class Controller extends HttpServlet {
 		getTerritories(country, request, result);
 		
 		if (result.size() > 0) {
+			
+			System.out.println(result.size());
+			for (String string : result) {
+				System.out.println(string);
+			}
+			
 			request.setAttribute("result", result);
 			destination = "updateCountry.jsp";
 		} else {
@@ -442,6 +465,7 @@ public class Controller extends HttpServlet {
 		} else {
 			throw new ControllerException("The path caused an error while converting backslashes into forwardslashes");
 		}
+		System.out.println(path);
 		
 		ObjectInputStream in = null;
 		
@@ -475,6 +499,7 @@ public class Controller extends HttpServlet {
 		} else {
 			throw new ControllerException("The path caused an error while converting backslashes into forwardslashes");
 		}
+		System.out.println(path);
 		
 		
 		ObjectOutputStream out = null;

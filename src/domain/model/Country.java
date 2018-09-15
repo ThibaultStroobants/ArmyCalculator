@@ -8,7 +8,7 @@ import domain.db.ConnectionDb;
 
 public class Country implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = Long.parseLong("5044190751079313744");
 	private ConnectionDb connections = new ConnectionDb();
 	private String id;
 	private String name;

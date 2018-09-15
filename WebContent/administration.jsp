@@ -1,5 +1,5 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -31,7 +31,7 @@
 						<input type="text" id="path" name="path">
 					</p>
 					<p>
-						<label for="overwrite">Overwrite existing files</label>
+						<label for="overwrite">Overwrite existing file</label>
 						<input type="checkbox" id="overwrite" name="overwrite">
 					</p>
 					<p>

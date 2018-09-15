@@ -10,6 +10,7 @@ import domain.model.Country;
 
 public class CountryDb implements Serializable {
 	
+	private static final long serialVersionUID = Long.parseLong("5044190751079313744");	
 	private Map<String, Country> countries = new HashMap<String, Country>();
 	
 	public CountryDb() {
